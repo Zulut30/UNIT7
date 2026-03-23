@@ -269,9 +269,9 @@ td:nth-child(4) { color:#9498b8; }
 .card-scene {
   width: 100%; max-width: 560px; height: 270px;
   perspective: 1200px; cursor: pointer; user-select: none; flex-shrink: 0;
-  touch-action: none;
+  touch-action: pan-y;
 }
-@media (max-width: 500px) { .card-scene { height: 210px; } }
+@media (max-width: 500px) { .card-scene { height: clamp(190px, 55vw, 240px); } }
 .card-inner {
   width: 100%; height: 100%; position: relative;
   transform-style: preserve-3d;
@@ -477,15 +477,18 @@ td:nth-child(4) { color:#9498b8; }
   .wl-header { padding: 1rem 1rem 1rem; }
   .wl-header h1 { font-size: 1.1rem; }
   .wl-header p { margin-bottom: 0.9rem; }
+  .controls { flex-direction: column; }
+  .search-wrap { min-width: 0; }
+  .controls select { min-width: 0; width: 100%; }
   .wl-statsbar { padding: 0.5rem 1rem; gap: 0.7rem; flex-wrap: wrap; }
   .cta-band { padding: 0.6rem 1rem; gap: 0.6rem; }
   .cta-band-left { flex-direction: column; align-items: flex-start; gap: 0.5rem; width: 100%; }
   .cta-btn, .cta-btn-ghost { width: 100%; justify-content: center; padding: 10px; }
-  .legend { display: none; } /* too cluttered on mobile */
+  .legend { display: none; }
   .table-wrap { padding: 0 0 80px; overflow-x: auto; }
   table { min-width: 0; font-size: 13px; }
   td, thead th { padding: 9px 8px; }
-  td:nth-child(4), thead th:nth-child(4) { display: none; }
+  td:nth-child(3), thead th:nth-child(3) { display: none; } /* hide section badge, keep both languages */
   td:first-child { padding-left: 6px; padding-right: 4px; }
 
   /* Flashcard toolbar: horizontal scroll instead of wrapping */
@@ -507,7 +510,7 @@ td:nth-child(4) { color:#9498b8; }
 
   /* Card */
   .fc-main { padding: 1rem 0.8rem 1.5rem; }
-  .card-scene { height: min(48vw, 220px); }
+  .card-scene { height: min(55vw, 240px); }
   .card-face { padding: 1.2rem 1rem; }
   .card-word { font-size: clamp(1.1rem, 5.5vw, 1.6rem); }
   .card-word.ans { font-size: clamp(1rem, 5vw, 1.5rem); }
@@ -550,9 +553,6 @@ td:nth-child(4) { color:#9498b8; }
 @media (max-width: 380px) {
   .quiz-opts { grid-template-columns: 1fr; }
   .rate-btn { font-size: 12px; padding: 12px 4px; }
-  .card-scene { height: 190px; }
-  .controls { flex-direction: column; }
-  .search-wrap, .controls select { width: 100%; min-width: 0; }
 }
 </style>
 </head>
@@ -666,8 +666,8 @@ td:nth-child(4) { color:#9498b8; }
     <div class="tb-group">
       <span class="tb-label">Направление</span>
       <select class="tb-sel" id="fc-dir">
-        <option value="en-ru">EN → Русский</option>
-        <option value="en-pl">EN → Polski</option>
+        <option value="en-ru">EN → Polski</option>
+        <option value="en-pl">EN → Русский</option>
         <option value="ru-en">Русский → EN</option>
         <option value="pl-en">Polski → EN</option>
       </select>
@@ -1149,22 +1149,21 @@ scene.addEventListener('touchstart',e=>{
   touchStartX=e.touches[0].clientX;
   touchStartY=e.touches[0].clientY;
 },{passive:true});
+let lastTouchEnd = 0;
 scene.addEventListener('touchend',e=>{
+  lastTouchEnd = Date.now();
   if(mode!=='flip')return;
   const dx=e.changedTouches[0].clientX-touchStartX;
   const dy=e.changedTouches[0].clientY-touchStartY;
-  if(Math.abs(dx)<Math.abs(dy)*1.2||Math.abs(dx)<40){
-    // vertical or small movement = flip
+  if(Math.abs(dx)<Math.abs(dy)*1.5||Math.abs(dx)<30){
     flipCard(); return;
   }
-  if(!flipped) return; // must flip first to rate
-  if(dx>40) rateCard(true);
-  else if(dx<-40) rateCard(false);
+  if(!flipped) return;
+  if(dx>30) rateCard(true);
+  else if(dx<-30) rateCard(false);
 },{passive:true});
-let lastTouchEnd = 0;
-scene.addEventListener('touchend', () => { lastTouchEnd = Date.now(); }, {passive:true});
 scene.addEventListener('click',()=>{
-  if(Date.now() - lastTouchEnd < 500) return; // suppress ghost click after touch
+  if(Date.now() - lastTouchEnd < 500) return;
   if(mode==='flip') flipCard();
 });
 
