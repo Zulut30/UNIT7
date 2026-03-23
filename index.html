@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 46 — Shopping & Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & BASE ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f1117;
+  --surface: #161923;
+  --surface2: #1e2235;
+  --surface3: #252a3f;
+  --border: #2a2f4a;
+  --text: #e8eaf0;
+  --muted: #6b7094;
+  --accent: #6c63ff;
+  --accent2: #a78bfa;
+  --accent-glow: rgba(108,99,255,0.16);
+  --green: #34d399;
+  --green-bg: rgba(52,211,153,0.1);
+  --red: #f87171;
+  --red-bg: rgba(248,113,113,0.1);
+  --yellow: #fbbf24;
+  --yellow-bg: rgba(251,191,36,0.1);
+  --s1:#1b3455;--s1t:#7ec8f8;--s2:#173828;--s2t:#5ee8a0;
+  --s3:#382510;--s3t:#f8c060;--s4:#381230;--s4t:#f8a0cc;
+  --s5:#281658;--s5t:#c0aff8;--s6:#0d3828;--s6t:#30d898;
+  --s7:#382a00;--s7t:#f8e070;--s8:#222222;--s8t:#c8ccd8;
+  --s9:#380e0e;--s9t:#f89090;--s10:#161c58;--s10t:#90b8f8;
+  --s11:#0d3818;--s11t:#80f0a0;--s12:#381a0e;--s12t:#f8b080;
+  --s13:#082840;--s13t:#78ccf8;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+button { font-family: 'Inter', sans-serif; cursor: pointer; }
+
+/* ─── NAV ─── */
+nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  display: flex; align-items: stretch; height: 56px;
+  position: sticky; top: 0; z-index: 300; flex-shrink: 0;
+}
+.nav-logo {
+  font-weight: 700; font-size: 0.95rem; color: var(--text);
+  letter-spacing: -0.03em; margin-right: auto;
+  display: flex; align-items: center; gap: 9px; flex-shrink: 0;
+}
+.nav-badge {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; font-size: 11px; font-weight: 700;
+  padding: 3px 9px; border-radius: 20px;
+}
+.nav-title span { color: var(--muted); font-weight: 400; }
+.nav-tabs { display: flex; align-items: stretch; gap: 2px; padding: 8px 0; margin-left: 1rem; }
+.nav-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 15px; font-size: 13.5px; font-weight: 500;
+  color: var(--muted); background: transparent;
+  border: 1px solid transparent; border-radius: 10px;
+  transition: all 0.18s; white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text); background: var(--surface2); }
+.nav-tab.active { color: var(--accent2); background: var(--accent-glow); border-color: rgba(108,99,255,0.3); }
+.tab-count {
+  font-size: 10px; font-weight: 600;
+  background: var(--surface3); color: var(--muted);
+  padding: 1px 6px; border-radius: 8px; transition: all 0.18s;
+}
+.nav-tab.active .tab-count { background: rgba(108,99,255,0.25); color: var(--accent2); }
+
+/* ─── PAGE SYSTEM ─── */
+.page { display: none; flex: 1; flex-direction: column; animation: pgIn 0.22s ease; }
+.page.active { display: flex; }
+@keyframes pgIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══════════════════════════════════
+   WORDLIST PAGE
+═══════════════════════════════════ */
+.wl-header {
+  background: linear-gradient(160deg,#161923 0%,#191c2e 100%);
+  padding: 1.8rem 2rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.wl-header h1 { font-size: clamp(1.1rem,3.5vw,1.6rem); font-weight: 700; letter-spacing: -0.04em; margin-bottom: 3px; }
+.wl-header h1 span { color: var(--muted); font-weight: 400; }
+.wl-header p { font-size: 12px; color: var(--muted); margin-bottom: 1.1rem; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; }
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--muted); }
+input[type="text"] {
+  width: 100%; height: 38px; padding: 0 14px 0 36px;
+  font-size: 13.5px; border: 1px solid var(--border); border-radius: 9px;
+  background: var(--surface2); color: var(--text); outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input[type="text"]::placeholder { color: var(--muted); }
+input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+select {
+  height: 38px; padding: 0 30px 0 11px; font-size: 13px;
+  border: 1px solid var(--border); border-radius: 9px;
+  background: var(--surface2); color: var(--text); outline: none; cursor: pointer;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%236b7094' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  min-width: 160px; transition: border-color 0.2s;
+}
+select:focus { border-color: var(--accent); }
+select option { background: #161923; }
+.wl-statsbar {
+  padding: 0.55rem 2rem; font-size: 12px; color: var(--muted);
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap;
+}
+.wl-statsbar strong { color: var(--text); }
+.legend { display: flex; gap: 4px; flex-wrap: wrap; }
+.leg-item {
+  display: flex; align-items: center; gap: 4px; font-size: 10.5px;
+  cursor: pointer; padding: 2px 6px; border-radius: 5px;
+  background: var(--surface2); border: 1px solid var(--border);
+  transition: all 0.14s; user-select: none;
+}
+.leg-item:hover { border-color: var(--accent); color: var(--text); }
+.leg-item.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent2); }
+.leg-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.cta-band {
+  padding: 0.65rem 2rem;
+  background: linear-gradient(90deg,rgba(108,99,255,0.07),rgba(167,139,250,0.05));
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+}
+.cta-band-left { display: flex; gap: 0.75rem; align-items: center; margin-right: auto; flex-wrap: wrap; }
+.cta-band p { font-size: 12.5px; color: var(--muted); }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 15px; background: var(--accent); color: #fff;
+  font-size: 13px; font-weight: 600; border-radius: 8px; border: none;
+  transition: opacity 0.15s, transform 0.1s; white-space: nowrap;
+}
+.cta-btn:hover { opacity: 0.87; transform: translateY(-1px); }
+.cta-btn-ghost {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px; background: var(--surface2); color: var(--muted);
+  font-size: 13px; font-weight: 500; border-radius: 8px;
+  border: 1px solid var(--border); transition: all 0.15s; white-space: nowrap;
+}
+.cta-btn-ghost:hover { border-color: var(--accent); color: var(--accent2); background: var(--accent-glow); }
+.cta-btn-ghost.active { background: var(--yellow-bg); border-color: var(--yellow); color: var(--yellow); }
+
+/* TABLE */
+.table-wrap { padding: 1.2rem 2rem 4rem; overflow-x: auto; flex: 1; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 480px; }
+thead th {
+  background: var(--surface2); color: var(--muted);
+  font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em;
+  padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border);
+  position: sticky; top: 56px; z-index: 10;
+}
+tbody tr { border-bottom: 1px solid rgba(42,47,74,0.5); transition: background 0.1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(30,34,53,0.7); }
+td { padding: 8px 12px; vertical-align: middle; line-height: 1.4; }
+td:first-child { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:500; }
+td:nth-child(3) { color:#c5c8de; }
+td:nth-child(4) { color:#9498b8; }
+.badge {
+  display: inline-block; padding: 2px 7px; border-radius: 5px;
+  font-size: 10px; font-weight: 600; white-space: nowrap;
+}
+.s1{background:var(--s1);color:var(--s1t)}.s2{background:var(--s2);color:var(--s2t)}
+.s3{background:var(--s3);color:var(--s3t)}.s4{background:var(--s4);color:var(--s4t)}
+.s5{background:var(--s5);color:var(--s5t)}.s6{background:var(--s6);color:var(--s6t)}
+.s7{background:var(--s7);color:var(--s7t)}.s8{background:var(--s8);color:var(--s8t)}
+.s9{background:var(--s9);color:var(--s9t)}.s10{background:var(--s10);color:var(--s10t)}
+.s11{background:var(--s11);color:var(--s11t)}.s12{background:var(--s12);color:var(--s12t)}
+.s13{background:var(--s13);color:var(--s13t)}
+/* Star button */
+.star-btn {
+  background: none; border: none; padding: 2px 4px;
+  color: var(--muted); font-size: 14px; line-height: 1;
+  transition: color 0.15s, transform 0.1s; cursor: pointer;
+}
+.star-btn:hover { color: var(--yellow); transform: scale(1.2); }
+.star-btn.starred { color: var(--yellow); }
+.no-results { text-align:center; padding:4rem; color:var(--muted); }
+
+/* ═══════════════════════════════════
+   FLASHCARDS PAGE
+═══════════════════════════════════ */
+.fc-toolbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 1.5rem;
+  display: flex; gap: 7px; align-items: center; flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.tb-group { display: flex; gap: 5px; align-items: center; }
+.tb-label { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; white-space: nowrap; }
+.tb-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.mode-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; font-size: 12.5px; font-weight: 500;
+  border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface2); color: var(--muted); transition: all 0.15s; white-space: nowrap;
+}
+.mode-btn:hover { color: var(--text); border-color: var(--accent); }
+.mode-btn.active { background: var(--accent-glow); border-color: rgba(108,99,255,0.5); color: var(--accent2); }
+.tb-sel {
+  height: 32px; padding: 0 26px 0 9px; font-size: 12px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface2); color: var(--text); outline: none; cursor: pointer;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7094' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+  min-width: 128px; transition: border-color 0.15s;
+}
+.tb-sel:focus { border-color: var(--accent); }
+.tb-sel option { background: #161923; }
+.icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface2);
+  color: var(--muted); transition: all 0.15s;
+}
+.icon-btn:hover { color: var(--text); border-color: var(--accent); }
+.icon-btn.on { background: var(--accent-glow); border-color: rgba(108,99,255,0.5); color: var(--accent2); }
+
+/* Progress */
+.fc-progress {
+  background: var(--surface);
+  padding: 0.4rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.prog-track { flex: 1; height: 4px; background: var(--surface3); border-radius: 10px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg,var(--accent),var(--accent2)); border-radius: 10px; transition: width 0.4s ease; }
+.prog-txt { font-size: 11px; color: var(--muted); white-space: nowrap; min-width: 48px; text-align: right; }
+.score-row { display: flex; gap: 6px; }
+.chip { display: flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 6px; }
+.chip-g { background: var(--green-bg); color: var(--green); }
+.chip-r { background: var(--red-bg); color: var(--red); }
+/* Streak badge */
+.streak-badge {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 7px; border-radius: 6px;
+  background: var(--yellow-bg); color: var(--yellow);
+  transition: all 0.3s;
+}
+.streak-badge.hidden { opacity: 0; pointer-events: none; }
+.streak-badge.pop { animation: streakPop 0.4s ease; }
+@keyframes streakPop { 0%{transform:scale(1)} 50%{transform:scale(1.3)} 100%{transform:scale(1)} }
+
+/* Main study area */
+.fc-main {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 1.8rem 1rem 2.5rem; overflow-y: auto;
+}
+
+/* ── Flip Card ── */
+.card-scene {
+  width: 100%; max-width: 560px; height: 270px;
+  perspective: 1200px; cursor: pointer; user-select: none; flex-shrink: 0;
+  touch-action: none;
+}
+@media (max-width: 500px) { .card-scene { height: 210px; } }
+.card-inner {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.48s cubic-bezier(0.4,0.2,0.2,1);
+}
+.card-inner.flipped { transform: rotateY(180deg); }
+/* Swipe animations */
+.card-inner.swipe-right { animation: swipeRight 0.35s ease forwards; }
+.card-inner.swipe-left  { animation: swipeLeft  0.35s ease forwards; }
+@keyframes swipeRight { to { transform: translateX(110%) rotateZ(15deg); opacity: 0; } }
+@keyframes swipeLeft  { to { transform: translateX(-110%) rotateZ(-15deg); opacity: 0; } }
+.card-face {
+  position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border-radius: 18px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 1.8rem; text-align: center;
+}
+.card-front {
+  background: linear-gradient(150deg,#1c2038 0%,#20243e 100%);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 56px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+.card-back {
+  background: linear-gradient(150deg,#18243a 0%,#1c2840 100%);
+  border: 1px solid rgba(108,99,255,0.28);
+  box-shadow: 0 20px 56px rgba(108,99,255,0.12);
+  transform: rotateY(180deg);
+}
+.card-chip {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--muted); margin-bottom: 0.9rem;
+  display: flex; align-items: center; gap: 5px;
+}
+.card-word { font-family:'JetBrains Mono',monospace; font-size:clamp(1.3rem,5vw,1.95rem); font-weight:500; line-height:1.2; }
+.card-word.ans { font-family:'Inter',sans-serif; color:var(--accent2); font-size:clamp(1.2rem,4vw,1.7rem); }
+.card-sub { font-size:13px; color:var(--muted); margin-top:5px; }
+.card-sec { position:absolute; top:13px; right:13px; font-size:9.5px; font-weight:600; padding:2px 7px; border-radius:5px; background:var(--surface3); color:var(--muted); }
+.card-hint { position:absolute; bottom:12px; font-size:10px; color:var(--muted); display:flex; align-items:center; gap:4px; }
+/* Card star */
+.card-star {
+  position: absolute; top: 12px; left: 13px;
+  background: none; border: none; font-size: 15px; color: var(--muted);
+  transition: color 0.15s, transform 0.1s; padding: 3px;
+}
+.card-star:hover { color: var(--yellow); transform: scale(1.2); }
+.card-star.on { color: var(--yellow); }
+
+/* Card nav */
+.card-nav { display:flex; align-items:center; gap:10px; margin-top:1.3rem; width:100%; max-width:560px; }
+.arr-btn {
+  display:flex; align-items:center; justify-content:center;
+  width:44px; height:44px; border-radius:12px;
+  border:1px solid var(--border); background:var(--surface2);
+  color:var(--muted); transition:all 0.15s; flex-shrink:0;
+}
+.arr-btn:hover:not(:disabled) { border-color:var(--accent); color:var(--text); }
+.arr-btn:disabled { opacity:0.28; cursor:default; }
+.card-ctr { flex:1; text-align:center; font-size:12.5px; color:var(--muted); }
+.card-ctr strong { color:var(--text); font-size:14px; }
+
+/* Rate row */
+.rate-row { display:flex; gap:8px; margin-top:1rem; width:100%; max-width:560px; }
+.rate-btn {
+  flex:1; padding:10px; border-radius:11px;
+  border:1px solid var(--border); background:var(--surface2);
+  font-size:13px; font-weight:600;
+  transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:5px;
+}
+.rate-again { color:var(--red); border-color:rgba(248,113,113,0.2); }
+.rate-again:hover { background:var(--red-bg); border-color:var(--red); }
+.rate-flip { color:var(--accent2); border-color:rgba(108,99,255,0.25); }
+.rate-flip:hover { background:var(--accent-glow); border-color:var(--accent); }
+.rate-know { color:var(--green); border-color:rgba(52,211,153,0.2); }
+.rate-know:hover { background:var(--green-bg); border-color:var(--green); }
+
+/* Keyboard hint */
+.kb-hint { display:flex; gap:10px; margin-top:0.9rem; flex-wrap:wrap; justify-content:center; }
+.kb-item { display:flex; align-items:center; gap:4px; font-size:10.5px; color:var(--muted); }
+.kb-key {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:24px; height:20px; padding:0 4px;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:4px; font-size:9.5px; font-weight:600; color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ── Quiz ── */
+.quiz-wrap { width:100%; max-width:560px; }
+.quiz-q {
+  background:linear-gradient(150deg,#1c2038 0%,#20243e 100%);
+  border:1px solid var(--border); border-radius:18px;
+  padding:2rem 1.8rem; text-align:center; margin-bottom:1.2rem;
+  box-shadow:0 18px 48px rgba(0,0,0,0.4); position: relative;
+}
+.quiz-q-chip { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.65rem; }
+.quiz-q-word { font-family:'JetBrains Mono',monospace; font-size:clamp(1.2rem,4.5vw,1.75rem); font-weight:500; }
+.quiz-opts { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+@media (max-width:440px) { .quiz-opts { grid-template-columns:1fr; } }
+.quiz-opt {
+  padding:12px 14px; border-radius:11px; border:1px solid var(--border);
+  background:var(--surface2); font-size:13px; font-weight:500;
+  color:var(--text); cursor:pointer; transition:all 0.14s; text-align:left; line-height:1.3;
+}
+.quiz-opt:hover:not(.answered) { border-color:var(--accent); background:var(--accent-glow); }
+.quiz-opt.correct { background:var(--green-bg)!important; border-color:var(--green)!important; color:var(--green)!important; }
+.quiz-opt.wrong { background:var(--red-bg)!important; border-color:var(--red)!important; color:var(--red)!important; }
+.quiz-opt.answered { cursor:default; }
+
+/* ── Write ── */
+.write-wrap { width:100%; max-width:560px; }
+.write-q {
+  background:linear-gradient(150deg,#1c2038 0%,#20243e 100%);
+  border:1px solid var(--border); border-radius:18px;
+  padding:2rem 1.8rem; text-align:center; margin-bottom:1.1rem;
+  box-shadow:0 18px 48px rgba(0,0,0,0.4); position:relative;
+}
+.write-q-chip { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:0.65rem; }
+.write-q-word { font-family:'JetBrains Mono',monospace; font-size:clamp(1.2rem,4.5vw,1.75rem); font-weight:500; }
+.write-row { display:flex; gap:8px; margin-bottom:7px; }
+.write-inp {
+  flex:1; height:48px; padding:0 14px;
+  font-size:14.5px; border:1px solid var(--border); border-radius:11px;
+  background:var(--surface2); color:var(--text); outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.write-inp::placeholder { color:var(--muted); }
+.write-inp:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
+.write-inp.ok { border-color:var(--green); background:var(--green-bg); color:var(--green); }
+.write-inp.bad { border-color:var(--red); background:var(--red-bg); color:var(--red); }
+.write-go {
+  height:48px; padding:0 18px; border-radius:11px;
+  background:var(--accent); border:none; color:#fff;
+  font-size:13.5px; font-weight:600; white-space:nowrap; transition:opacity 0.15s;
+}
+.write-go:hover { opacity:0.84; }
+.write-fb {
+  padding:9px 13px; border-radius:9px; font-size:13px; font-weight:500;
+  display:none; margin-bottom:7px;
+}
+.write-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid rgba(52,211,153,0.2); }
+.write-fb.bad { display:block; background:var(--red-bg); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
+.write-nxt {
+  width:100%; padding:11px; border-radius:11px;
+  border:1px solid var(--border); background:var(--surface2);
+  color:var(--muted); font-size:13.5px; font-weight:600;
+  transition:all 0.15s; display:none;
+}
+.write-nxt:hover { border-color:var(--accent); color:var(--accent2); background:var(--accent-glow); }
+.write-skip { background:none; border:none; color:var(--muted); font-size:11.5px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; margin-top:5px; display:block; margin-left:auto; }
+.write-skip:hover { color:var(--text); }
+
+/* ── Finish ── */
+.finish { display:none; text-align:center; max-width:440px; width:100%; }
+.finish.show { display:block; }
+.finish-emoji { font-size:3.2rem; margin-bottom:0.7rem; }
+.finish h2 { font-size:1.6rem; font-weight:700; margin-bottom:0.35rem; }
+.finish p { color:var(--muted); font-size:13.5px; margin-bottom:1.6rem; }
+.finish-stats { display:flex; gap:10px; justify-content:center; margin-bottom:1.6rem; flex-wrap:wrap; }
+.fstat { background:var(--surface2); border:1px solid var(--border); border-radius:13px; padding:0.9rem 1.3rem; text-align:center; min-width:85px; }
+.fstat .v { font-size:1.9rem; font-weight:700; }
+.fstat .l { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+.finish-btns { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.fbtn { padding:10px 20px; border-radius:11px; font-size:13.5px; font-weight:600; transition:all 0.15s; }
+.fbtn-p { background:var(--accent); border:none; color:#fff; }
+.fbtn-p:hover { opacity:0.84; }
+.fbtn-s { background:var(--surface2); border:1px solid var(--border); color:var(--text); }
+.fbtn-s:hover { border-color:var(--accent); color:var(--accent2); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width:680px) {
+  nav { padding:0 1rem; }
+  .nav-title { display:none; }
+  .nav-tabs { margin-left:0.5rem; }
+  .nav-tab { padding:0 11px; font-size:13px; }
+  .wl-header,.table-wrap,.wl-statsbar,.cta-band { padding-left:1rem; padding-right:1rem; }
+  .fc-toolbar { padding:0.5rem 1rem; }
+  .fc-progress { padding:0.38rem 1rem; }
+  .fc-main { padding:1rem 0.75rem 2rem; }
+  td:nth-child(4),thead th:nth-child(4) { display:none; }
+}
+@media (max-width:420px) {
+  .controls { flex-direction:column; }
+  .search-wrap,.controls select { min-width:100%; }
+  .tb-label { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-logo">
+    <span class="nav-badge">46</span>
+    <span class="nav-title">Shopping & Services <span>· Wordlist</span></span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-wordlist" onclick="showPage('wordlist')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Словарь
+      <span class="tab-count" id="wl-tab-count">176</span>
+    </button>
+    <button class="nav-tab" id="tab-flashcards" onclick="showPage('flashcards')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      Карточки
+      <span class="tab-count" id="fc-tab-count">176</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ PAGE: WORDLIST ═══ -->
+<div class="page active" id="page-wordlist">
+  <div class="wl-header">
+    <h1>Wordlist 46 <span>— Shopping & Services</span></h1>
+    <p>176 слов · английский / русский / польский</p>
+    <div class="controls">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="wl-search" placeholder="Поиск...">
+      </div>
+      <select id="wl-filter">
+        <option value="">Все разделы (176)</option>
+        <option value="46.1">46.1 Types of shops</option>
+        <option value="46.2">46.2 Products</option>
+        <option value="46.3">46.3 Selling and buying</option>
+        <option value="46.4">46.4 Special offers</option>
+        <option value="46.5">46.5 Complaints</option>
+        <option value="46.6">46.6 Advertising</option>
+        <option value="46.7">46.7 Services</option>
+        <option value="46.8">46.8 Paying</option>
+        <option value="46.9">46.9 Finance &amp; banks</option>
+        <option value="46.10">46.10 Consumer rights</option>
+        <option value="46.11">46.11 Wordpower</option>
+        <option value="46.12">46.12 Idioms</option>
+        <option value="46.13">46.13 Phrases with touch</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="wl-statsbar">
+    <span id="wl-stats">Показано: <strong>176</strong> из 176</span>
+    <div class="legend" id="wl-legend"></div>
+  </div>
+
+  <div class="cta-band">
+    <div class="cta-band-left">
+      <button class="cta-btn" onclick="showPage('flashcards')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Учить карточками
+      </button>
+      <button class="cta-btn-ghost" id="btn-starred-only" onclick="toggleStarredFilter()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Отмеченные <span id="starred-count-badge" style="font-size:10px;background:var(--surface3);border-radius:5px;padding:1px 5px;margin-left:2px">0</span>
+      </button>
+    </div>
+    <button class="cta-btn-ghost" onclick="clearStars()" style="font-size:12px;padding:5px 10px">Сбросить звёзды</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:26px"></th>
+          <th>English</th>
+          <th>Раздел</th>
+          <th>Русский</th>
+          <th>Polski</th>
+        </tr>
+      </thead>
+      <tbody id="wl-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ PAGE: FLASHCARDS ═══ -->
+<div class="page" id="page-flashcards">
+
+  <div class="fc-toolbar">
+    <div class="tb-group">
+      <span class="tb-label">Режим</span>
+      <button class="mode-btn active" id="mb-flip" onclick="setMode('flip')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/></svg>
+        Карточки
+      </button>
+      <button class="mode-btn" id="mb-quiz" onclick="setMode('quiz')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
+        Тест
+      </button>
+      <button class="mode-btn" id="mb-write" onclick="setMode('write')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Ввод
+      </button>
+    </div>
+    <div class="tb-divider"></div>
+    <div class="tb-group">
+      <span class="tb-label">Направление</span>
+      <select class="tb-sel" id="fc-dir">
+        <option value="en-ru">EN → Русский</option>
+        <option value="en-pl">EN → Polski</option>
+        <option value="ru-en">Русский → EN</option>
+        <option value="pl-en">Polski → EN</option>
+      </select>
+    </div>
+    <div class="tb-divider"></div>
+    <div class="tb-group">
+      <span class="tb-label">Набор</span>
+      <select class="tb-sel" id="fc-deck">
+        <option value="all">Все слова</option>
+        <option value="starred">⭐ Отмеченные</option>
+        <option value="46.1">46.1 Types of shops</option>
+        <option value="46.2">46.2 Products</option>
+        <option value="46.3">46.3 Selling &amp; buying</option>
+        <option value="46.4">46.4 Special offers</option>
+        <option value="46.5">46.5 Complaints</option>
+        <option value="46.6">46.6 Advertising</option>
+        <option value="46.7">46.7 Services</option>
+        <option value="46.8">46.8 Paying</option>
+        <option value="46.9">46.9 Finance &amp; banks</option>
+        <option value="46.10">46.10 Consumer rights</option>
+        <option value="46.11">46.11 Wordpower</option>
+        <option value="46.12">46.12 Idioms</option>
+        <option value="46.13">46.13 Phrases w/ touch</option>
+      </select>
+    </div>
+    <div class="tb-divider"></div>
+    <div class="tb-group" style="gap:5px">
+      <button class="icon-btn" id="btn-shuffle" title="Перемешать" onclick="toggleShuffle()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+      </button>
+      <button class="icon-btn" title="Перезапустить" onclick="restart()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="fc-progress">
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="score-row">
+      <div class="chip chip-g">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="sc-correct">0</span>
+      </div>
+      <div class="chip chip-r">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span id="sc-wrong">0</span>
+      </div>
+      <div class="streak-badge hidden" id="streak-badge">🔥 <span id="streak-num">0</span></div>
+    </div>
+    <div class="prog-txt" id="prog-txt">0 / 0</div>
+  </div>
+
+  <div class="fc-main" id="fc-main">
+
+    <!-- FLIP -->
+    <div id="area-flip" style="width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center">
+      <div class="card-scene" id="card-scene">
+        <div class="card-inner" id="card-inner">
+          <div class="card-face card-front">
+            <button class="card-star" id="card-star-btn" onclick="toggleCardStar(event)" title="Отметить слово">★</button>
+            <div class="card-chip" id="cfront-chip">English</div>
+            <div class="card-word" id="cfront-word">baker's</div>
+            <div class="card-sec" id="card-sec">46.1</div>
+            <div class="card-hint">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/></svg>
+              нажмите или пробел
+            </div>
+          </div>
+          <div class="card-face card-back">
+            <div class="card-chip" id="cback-chip">Русский</div>
+            <div class="card-word ans" id="cback-word">пекарня</div>
+            <div class="card-sub" id="cback-sub">piekarnia</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-nav">
+        <button class="arr-btn" id="btn-prev" onclick="prevCard()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="card-ctr" id="card-ctr"><strong>1</strong> / 176</div>
+        <button class="arr-btn" id="btn-next" onclick="nextCardBrowse()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="rate-row" id="rate-row" style="display:none">
+        <button class="rate-btn rate-again" onclick="rateCard(false)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Ещё раз
+        </button>
+        <button class="rate-btn rate-flip" onclick="flipCard()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          Перевернуть
+        </button>
+        <button class="rate-btn rate-know" onclick="rateCard(true)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Знаю
+        </button>
+      </div>
+
+      <div class="kb-hint" id="kb-flip">
+        <div class="kb-item"><kbd class="kb-key">Space</kbd> перевернуть</div>
+        <div class="kb-item"><kbd class="kb-key">→</kbd> знаю</div>
+        <div class="kb-item"><kbd class="kb-key">←</kbd> ещё раз</div>
+        <div class="kb-item"><kbd class="kb-key">S</kbd> ⭐</div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="area-quiz" style="display:none;width:100%;max-width:560px">
+      <div class="quiz-q">
+        <button class="card-star" id="quiz-star-btn" onclick="toggleCardStar(event)" title="Отметить">★</button>
+        <div class="quiz-q-chip" id="quiz-chip">English → Русский</div>
+        <div class="quiz-q-word" id="quiz-word">baker's</div>
+      </div>
+      <div class="quiz-opts" id="quiz-opts"></div>
+    </div>
+
+    <!-- WRITE -->
+    <div id="area-write" style="display:none;width:100%;max-width:560px">
+      <div class="write-q">
+        <button class="card-star" id="write-star-btn" onclick="toggleCardStar(event)" title="Отметить">★</button>
+        <div class="write-q-chip" id="write-chip">English → Русский</div>
+        <div class="write-q-word" id="write-word">baker's</div>
+      </div>
+      <div class="write-row">
+        <input type="text" class="write-inp" id="write-inp" placeholder="Введите перевод..." autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="write-go" onclick="checkWrite()">Проверить</button>
+      </div>
+      <div class="write-fb" id="write-fb"></div>
+      <button class="write-nxt" id="write-nxt" onclick="nextAfterWrite()">Следующее →</button>
+      <button class="write-skip" onclick="skipWrite()">Пропустить</button>
+      <div class="kb-hint" style="margin-top:0.5rem">
+        <div class="kb-item"><kbd class="kb-key">Enter</kbd> проверить / далее</div>
+      </div>
+    </div>
+
+    <!-- FINISH -->
+    <div class="finish" id="finish">
+      <div class="finish-emoji" id="f-emoji">🎉</div>
+      <h2 id="f-title">Раунд завершён!</h2>
+      <p id="f-msg">Отличная работа!</p>
+      <div class="finish-stats">
+        <div class="fstat"><div class="v" id="f-c" style="color:var(--green)">0</div><div class="l">Знаю</div></div>
+        <div class="fstat"><div class="v" id="f-w" style="color:var(--red)">0</div><div class="l">Ещё раз</div></div>
+        <div class="fstat"><div class="v" id="f-p" style="color:var(--accent2)">0%</div><div class="l">Результат</div></div>
+        <div class="fstat"><div class="v" id="f-streak" style="color:var(--yellow)">0</div><div class="l">Макс. серия</div></div>
+      </div>
+      <div class="finish-btns">
+        <button class="fbtn fbtn-p" onclick="restartWrong()">Повторить ошибки</button>
+        <button class="fbtn fbtn-s" onclick="restart()">Сначала</button>
+        <button class="fbtn fbtn-s" onclick="showPage('wordlist')">К словарю</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ══ DATA ══ */
+const SECTIONS = {
+  "46.1":{label:"Types of shops",cls:"s1",color:"#7ec8f8"},
+  "46.2":{label:"Products",cls:"s2",color:"#5ee8a0"},
+  "46.3":{label:"Selling & buying",cls:"s3",color:"#f8c060"},
+  "46.4":{label:"Special offers",cls:"s4",color:"#f8a0cc"},
+  "46.5":{label:"Complaints",cls:"s5",color:"#c0aff8"},
+  "46.6":{label:"Advertising",cls:"s6",color:"#30d898"},
+  "46.7":{label:"Services",cls:"s7",color:"#f8e070"},
+  "46.8":{label:"Paying",cls:"s8",color:"#a0a8c0"},
+  "46.9":{label:"Finance & banks",cls:"s9",color:"#f89090"},
+  "46.10":{label:"Consumer rights",cls:"s10",color:"#90b8f8"},
+  "46.11":{label:"Wordpower",cls:"s11",color:"#80f0a0"},
+  "46.12":{label:"Idioms",cls:"s12",color:"#f8b080"},
+  "46.13":{label:"Phrases w/ touch",cls:"s13",color:"#78ccf8"},
+};
+const DATA=[["baker's","46.1","пекарня","piekarnia"],["bookshop","46.1","книжный магазин","księgarnia"],["butcher's","46.1","мясная лавка","sklep mięsny"],["chain store","46.1","магазин сети","sklep sieciowy"],["chemist's","46.1","аптека","apteka"],["clothes shop","46.1","магазин одежды","sklep odzieżowy"],["corner shop","46.1","местный магазинчик","lokalny sklepik"],["deli","46.1","деликатесы","delikatesy"],["delicatessen","46.1","магазин деликатесов","delikatesy"],["department store","46.1","универмаг","dom towarowy"],["DIY store","46.1","магазин для мастеров","sklep dla majsterkowiczów"],["electrical shop","46.1","магазин электротоваров","sklep z artykułami elektrycznymi"],["fishmonger's","46.1","рыбный магазин","sklep rybny"],["florist's","46.1","цветочный магазин","kwiaciarnia"],["furniture shop","46.1","мебельный магазин","sklep meblowy"],["greengrocer's","46.1","овощной магазин","warzywniak"],["grocer's","46.1","продуктовый магазин","sklep spożywczy"],["high street","46.1","главная торговая улица","główna ulica"],["independent shop","46.1","независимый магазин","sklep nienależący do sieci"],["jeweller's","46.1","ювелирный магазin","jubiler"],["market","46.1","рынок","rynek / targ"],["market stall","46.1","рыночный прилавок","stragan / stoisko"],["music shop","46.1","музыкальный магазин","sklep muzyczny"],["newsagent's","46.1","газетный киоск","kiosk"],["off-licence","46.1","магазин алкоголя","sklep z alkoholem"],["online shop","46.1","интернет-магазин","sklep internetowy"],["outlet","46.1","точка розничной продажи","punkt sprzedaży detalicznej"],["pharmacy","46.1","аптека","apteka"],["shoe shop","46.1","обувной магазин","sklep obuwniczy"],["shopping centre","46.1","торговый центр","centrum handlowe"],["shopping mall","46.1","крытый торговый центр","zadaszone centrum handlowe"],["sports shop","46.1","спортивный магазин","sklep sportowy"],["stationer's","46.1","канцелярский магазин","sklep papierniczy"],["supermarket","46.1","супермаркет","supermarket"],["brand new","46.2","совершенно новый","zupełnie nowy"],["cardigan","46.2","кардиган","sweter rozpinany"],["dishwasher","46.2","посудомоечная машина","zmywarka do naczyń"],["good quality","46.2","хорошее качество","dobrej jakości"],["goods","46.2","товары","towary"],["groceries","46.2","продукты питания","artykuły spożywcze"],["jeans","46.2","джинсы","dżinsy"],["jumper","46.2","джемпер","sweter (wkładany przez głowę)"],["luxury items","46.2","предметы роскоши","towary luksusowe"],["afford","46.3","позволить себе","móc sobie na coś pozwolić"],["bankrupt","46.3","банкрот / обанкротиться","zbankrutować"],["bargain","46.3","выгодная покупка / случай","okazja"],["budget","46.3","бюджет / планировать","planować / budżet"],["changing room","46.3","примерочная","przymierzalnia"],["checkout","46.3","касса","kasa"],["choice","46.3","выбор","wybór"],["close down","46.3","закрываться","zamykać"],["compare","46.3","сравнивать","porównywać"],["convenience","46.3","удобство","wygoda / udogodnienie"],["customer / client","46.3","покупатель / клиент","klient / klientka"],["fitting room","46.3","примерочная","przymierzalnia"],["have sth in stock","46.3","иметь в наличии","mieć coś na stanie"],["opening hours","46.3","часы работы","godziny otwarcia"],["out of stock","46.3","нет в наличии","wyprzedany"],["profit","46.3","прибыль","zysk"],["purchase","46.3","покупка / покупать","kupować / zakupy"],["quality","46.3","качество","jakość"],["queue","46.3","очередь","kolejka"],["reduced","46.3","по сниженной цене","obniżony"],["shopping list","46.3","список покупок","lista zakupów"],["shopping trolley","46.3","тележка для покупок","wózek na zakupy"],["special offer","46.3","специальное предложение","oferta specjalna"],["staff","46.3","персонал","personel"],["stall holder","46.3","владелец прилавка","straganarz"],["try sth on","46.3","примерить что-либо","przymierzać coś"],["value","46.3","ценность / стоимость","wartość"],["20% off","46.4","скидка 20%","dwadzieścia procent taniej"],["closing down sale","46.4","распродажа при закрытии","wyprzedaż przy likwidacji"],["discount","46.4","скидка","rabat / zniżka"],["good deal","46.4","выгодная сделка","dobra oferta"],["good value for money","46.4","хорошее соотношение цены/качества","dobry stosunek wartości do ceny"],["half price","46.4","полцены","za pół ceny"],["in the sale","46.4","на распродаже","w wyprzedaży"],["look for a bargain","46.4","искать выгодную покупку","szukać okazji"],["consumer awareness","46.5","осведомлённость потребителей","świadomość konsumentów"],["customer care","46.5","обслуживание клиентов","obsługa klienta"],["exchange","46.5","обменивать","wymienić"],["fail to work","46.5","не работать","działać wadliwie"],["faulty","46.5","неисправный","wadliwy"],["get your money back","46.5","вернуть деньги","odzyskać pieniądze"],["helpline","46.5","горячая линия","linia pomocy telefonicznej"],["incompetent","46.5","некомпетентный","niekompetentny"],["receipt","46.5","квитанция / чек","rachunek / paragon"],["refund","46.5","возврат денег","zwrot pieniędzy"],["return sth","46.5","вернуть что-либо","oddawać coś"],["service","46.5","обслуживание","obsługa"],["advertisement","46.6","реклама","reklama"],["advertising campaign","46.6","рекламная кампания","kampania reklamowa"],["billboard","46.6","рекламный щит","billboard"],["brand name","46.6","торговая марка","nazwa marki"],["customer-friendly","46.6","ориентированный на клиента","przyjazny dla klienta"],["fair-trade","46.6","справедливая торговля","sprawiedliwy handel"],["flyer","46.6","листовка","ulotka"],["handmade","46.6","ручной работы","ręcznej roboty"],["hoarding","46.6","большой рекламный щит","duża tablica reklamowa"],["label","46.6","этикетка","etykieta / określenie"],["leaflet","46.6","листовка / брошюра","ulotka"],["market research","46.6","исследование рынка","badanie rynku"],["organic","46.6","органический","naturalny / ekologiczny"],["promotion","46.6","продвижение / акция","promocja / reklama"],["publicity","46.6","огласка / реклама","rozgłos / reklama"],["range","46.6","ассортимент / диапазон","zakres"],["TV commercial","46.6","телевизионная реклама","reklama telewizyjna"],["bank","46.7","банк","bank"],["business","46.7","бизнес / предприятие","działalność gospodarcza"],["car wash","46.7","автомойка","myjnia samochodowa"],["carpenter","46.7","плотник / столяр","stolarz / cieśla"],["contract (hire)","46.7","контракт (найм)","wynająć kogoś do czegoś"],["contract (agreement)","46.7","договор / соглашение","umowa"],["delivery","46.7","доставка","dostawa"],["dry cleaner's","46.7","химчистка","pralnia chemiczna"],["estate agent's","46.7","агентство недвижимости","agencja nieruchomości"],["financial adviser","46.7","финансовый советник","doradca finansowy"],["hairdresser's","46.7","парикмахерская","salon fryzjerski"],["hire","46.7","нанимать","najmować (do pracy)"],["manufacturer","46.7","производитель","producent / wytwórca"],["order","46.7","заказывать","zamawiać"],["petrol station","46.7","автозаправочная станция","stacja benzynowa"],["plumber","46.7","сантехник","hydraulik"],["retailer","46.7","розничный торговец","sprzedawca detaliczny"],["specialist","46.7","специалист","specjalista / specjalistka"],["tailor","46.7","портной","krawiec"],["travel agent's","46.7","туристическое агентство","biuro podróży"],["borrow money from sb","46.8","занять деньги у кого-то","pożyczać od kogoś pieniądze"],["cash","46.8","наличные деньги","gotówka / pieniądze"],["cash on delivery","46.8","наложенный платёж","płatność przy odbiorze"],["be strapped for cash","46.8","испытывать нехватку денег","odczuwać brak gotówki"],["charge","46.8","плата / сбор","opłata / należność"],["cost a fortune","46.8","стоить целое состояние","kosztować majątek"],["cost/pay an arm and a leg","46.8","стоить огромных денег","słono kosztować / zapłacić"],["deposit","46.8","залог / задаток","zaliczka / zadatek"],["lend","46.8","одолжить (кому-то)","pożyczać (komuś)"],["money","46.8","деньги","pieniądze"],["owe","46.8","быть должным","być winnym / dłużnym"],["pay by bank transfer","46.8","платить банковским переводом","płacić przelewem"],["pay by credit/debit card","46.8","платить картой","płacić kartą kredytową / debetową"],["pay in advance","46.8","платить вперёд","płacić z góry"],["pay in cash","46.8","платить наличными","płacić gotówką"],["pay in instalments","46.8","платить в рассрочку","płacić w ratach"],["pay the balance","46.8","оплатить остаток долга","spłacić resztę należności"],["pay through the nose","46.8","переплачивать","przepłacać"],["rip-off","46.8","мошенничество / обман","złodziejstwo / oszustwo"],["take out a loan","46.8","взять кредит","wziąć pożyczkę"],["amount","46.9","сумма / квота","kwota / suma"],["annual rate","46.9","годовая ставка","roczna stopa procentowa"],["ATM","46.9","банкомат","bankomat"],["balance","46.9","баланс / остаток","saldo"],["bank account","46.9","банковский счёт","konto bankowe"],["billing cycle","46.9","расчётный период","cykl rozliczeniowy"],["card number","46.9","номер карты","numer karty"],["card type","46.9","тип карты","typ karty"],["card verification number","46.9","код верификации карты","numer weryfikacyjny"],["cardholder","46.9","держатель карты","właściciel karty"],["cash machine","46.9","банкомат","bankomat"],["cheque","46.9","чек","czek"],["credit card cloning","46.9","клонирование карты","kopiowanie karty kredytowej"],["credit limit","46.9","кредитный лимит","limit kredytowy"],["debit card","46.9","дебетовая карта","karta debetowa"],["debt-free","46.9","без долгов","wolny od zadłużenia"],["exceed","46.9","превышать","przekraczać"],["exchange rate","46.9","обменный курс","kurs wymiany (walut)"],["expiry date","46.9","срок действия / истечения","termin ważności"],["fees","46.9","комиссия / сборы","opłaty"],["foreign currency","46.9","иностранная валюта","obca waluta"],["income","46.9","доход","dochód"],["insured","46.9","застрахованный","ubezpieczony"],["interest","46.9","проценты","oprocentowanie"],["interest rate","46.9","процентная ставка","stopa procentowa"],["invest in shares/stocks","46.9","инвестировать в акции","inwestować w akcje"],["investor","46.9","инвестор","inwestor"],["pay back","46.9","вернуть долг","zwrócić"],["pay off","46.9","погасить долг","spłacić"],["PIN number","46.9","PIN-код","numer PIN"],["stock exchange","46.9","фондовая биржа","giełda papierów wartościowych"],["stock market","46.9","фондовый рынок","giełda"],["terms and conditions","46.9","условия и положения","zasady i warunki"],["unauthorized","46.9","несанкционированный","nieautoryzowany"],["consumer","46.10","потребитель","konsument"],["consumer protection","46.10","защита прав потребителей","ochrona konsumenta"],["durable goods","46.10","товары длит. пользования","dobra trwałe"],["full warranty","46.10","полная гарантия","pełna gwarancja"],["limited warranty","46.10","ограниченная гарантия","ograniczona gwarancja"],["liability","46.10","ответственность","odpowiedzialność"],["liable","46.10","ответственный","odpowiedzialny"],["marketplace","46.10","рынок / торговая площадка","rynek"],["mediation","46.10","посредничество","mediacja"],["merchandise","46.10","товары","towar"],["monopoly","46.10","монополия","monopol"],["protection","46.10","защита","ochrona"],["regulations","46.10","правила / регламент","przepisy / regulacje"],["resolve a dispute","46.10","разрешить спор","rozwiązać spór"],["statutory rights","46.10","законные права","prawa ustawowe"],["unfair practices","46.10","недобросовестная практика","nieuczciwe praktyki"],["assess","46.11","оценивать","ocenić"],["cautious","46.11","осторожный","ostrożny / przezorny"],["entitled to sth","46.11","иметь право на что-либо","być uprawnionym do czegoś"],["expire","46.11","истекать (о сроке)","wygasać / tracić ważność"],["guarantee","46.11","гарантия","gwarancja"],["misleading","46.11","вводящий в заблуждение","wprowadzający w błąd"],["resemble","46.11","быть похожим на","przypominać"],["be struck by sth","46.12","быть поражённым чем-либо","być pod wrażeniem czegoś"],["give sth a new lease of life","46.12","дать новую жизнь чему-либо","tchnąć w coś nowe życie"],["have a brainwave","46.12","получить озарение","doznać olśnienia"],["work your magic","46.12","сотворить чудо","wyczarować coś"],["be in touch with","46.13","поддерживать связь / быть в курсе","być z kimś w kontakcie"],["be out of touch","46.13","не ориентироваться / потерять связь","nie orientować się"],["get in touch","46.13","связаться","skontaktować się"],["have the Midas touch","46.13","иметь золотые руки","mieć dotyk Midasa"],["lose touch","46.13","потерять контакт","tracić kontakt"],["put the finishing touches","46.13","нанести последние штрихи","dodać ostatnie poprawki"],["touch and go","46.13","неопределённый / рискованный","niepewny"],["touch base","46.13","кратко переговорить","skontaktować się krótko"],["touch on sth","46.13","затронуть тему / вопрос","dotknąć istotnej kwestii"]];
+
+/* ══ STARS (localStorage) ══ */
+let stars = new Set(JSON.parse(localStorage.getItem('u46stars') || '[]'));
+function saveStars() { localStorage.setItem('u46stars', JSON.stringify([...stars])); }
+function isStarred(word) { return stars.has(word); }
+function toggleStar(word) {
+  if (stars.has(word)) stars.delete(word); else stars.add(word);
+  saveStars(); updateStarredBadge(); wlRender();
+}
+function clearStars() {
+  stars.clear(); saveStars(); updateStarredBadge(); wlRender();
+  if (starredFilterOn) toggleStarredFilter();
+}
+function updateStarredBadge() {
+  document.getElementById('starred-count-badge').textContent = stars.size;
+}
+
+/* ══ PAGE SWITCHER ══ */
+let currentPage = 'wordlist';
+function showPage(pg) {
+  currentPage = pg;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + pg).classList.add('active');
+  document.getElementById('tab-' + pg).classList.add('active');
+  if (pg === 'flashcards') restart();
+}
+
+/* ══ WORDLIST ══ */
+let starredFilterOn = false;
+function toggleStarredFilter() {
+  starredFilterOn = !starredFilterOn;
+  document.getElementById('btn-starred-only').classList.toggle('active', starredFilterOn);
+  wlRender();
+}
+function buildWlLegend() {
+  const leg = document.getElementById('wl-legend');
+  Object.entries(SECTIONS).forEach(([key, val]) => {
+    const el = document.createElement('span');
+    el.className = 'leg-item'; el.id = 'leg-' + key.replace('.','_');
+    el.innerHTML = `<span class="leg-dot" style="background:${val.color}"></span>${key}`;
+    el.addEventListener('click', () => {
+      const sel = document.getElementById('wl-filter');
+      sel.value = sel.value === key ? '' : key; wlRender();
+    });
+    leg.appendChild(el);
+  });
+}
+function wlRender() {
+  const q = document.getElementById('wl-search').value.toLowerCase().trim();
+  const sec = document.getElementById('wl-filter').value;
+  document.querySelectorAll('.leg-item').forEach(l => l.classList.remove('active'));
+  if (sec) { const el = document.getElementById('leg-' + sec.replace('.','_')); if (el) el.classList.add('active'); }
+  const filtered = DATA.filter(r => {
+    if (starredFilterOn && !isStarred(r[0])) return false;
+    const ms = !sec || r[1] === sec;
+    const mq = !q || r[0].toLowerCase().includes(q) || r[2].toLowerCase().includes(q) || r[3].toLowerCase().includes(q);
+    return ms && mq;
+  });
+  document.getElementById('wl-tab-count').textContent = filtered.length;
+  const tbody = document.getElementById('wl-tbody');
+  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="5" class="no-results">Ничего не найдено</td></tr>`; document.getElementById('wl-stats').innerHTML = 'Показано: <strong>0</strong> из ' + DATA.length; return; }
+  tbody.innerHTML = filtered.map(r => {
+    const s = SECTIONS[r[1]]; const starred = isStarred(r[0]);
+    return `<tr>
+      <td><button class="star-btn ${starred?'starred':''}" onclick="toggleStar('${r[0].replace(/'/g,"\\'")}');this.classList.toggle('starred')" title="Отметить">${starred?'★':'☆'}</button></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500">${r[0]}</td>
+      <td><span class="badge ${s.cls}">${r[1]}</span></td>
+      <td style="color:#c5c8de">${r[2]}</td>
+      <td style="color:#9498b8">${r[3]}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('wl-stats').innerHTML = `Показано: <strong>${filtered.length}</strong> из ${DATA.length}`;
+}
+document.getElementById('wl-search').addEventListener('input', wlRender);
+document.getElementById('wl-filter').addEventListener('change', wlRender);
+buildWlLegend(); updateStarredBadge(); wlRender();
+
+/* ══ FLASHCARD STATE ══ */
+let mode='flip', dir='en-ru', shuffleOn=false;
+let deck=[], wrongCards=[], idx=0;
+let scCorrect=0, scWrong=0, streak=0, maxStreak=0;
+let flipped=false, quizDone=false, writeDone=false;
+
+function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]; } return b; }
+function getFront(c){ return dir==='en-ru'||dir==='en-pl'?c[0]:dir==='ru-en'?c[2]:c[3]; }
+function getBack(c){ return dir==='en-ru'?c[2]:dir==='en-pl'?c[3]:c[0]; }
+function getSub(c){ return dir==='en-ru'?c[3]:dir==='en-pl'?c[2]:''; }
+function fLang(){ return dir==='en-ru'||dir==='en-pl'?'English':dir==='ru-en'?'Русский':'Polski'; }
+function bLang(){ return dir==='en-ru'?'Русский':dir==='en-pl'?'Polski':'English'; }
+function dirLbl(){ return fLang()+' → '+bLang(); }
+
+function getFiltered(){
+  const val = document.getElementById('fc-deck').value;
+  if (val==='starred') return DATA.filter(r=>isStarred(r[0]));
+  if (val==='all') return DATA;
+  return DATA.filter(r=>r[1]===val);
+}
+function buildDeck(cards){
+  deck=shuffleOn?shuffle(cards):[...cards];
+  idx=0;scCorrect=0;scWrong=0;streak=0;maxStreak=0;wrongCards=[];
+  updateProg();
+  document.getElementById('fc-tab-count').textContent=deck.length;
+}
+function updateProg(){
+  const total=deck.length, done=Math.min(idx,total);
+  document.getElementById('prog-fill').style.width=(total?done/total*100:0)+'%';
+  document.getElementById('prog-txt').textContent=done+' / '+total;
+  document.getElementById('sc-correct').textContent=scCorrect;
+  document.getElementById('sc-wrong').textContent=scWrong;
+  const sb=document.getElementById('streak-badge');
+  document.getElementById('streak-num').textContent=streak;
+  if(streak>=3){ sb.classList.remove('hidden'); } else { sb.classList.add('hidden'); }
+}
+function popStreak(){
+  const sb=document.getElementById('streak-badge');
+  sb.classList.remove('pop');
+  void sb.offsetWidth;
+  sb.classList.add('pop');
+}
+
+function showAreas(){
+  document.getElementById('area-flip').style.display=mode==='flip'?'flex':'none';
+  document.getElementById('area-quiz').style.display=mode==='quiz'?'block':'none';
+  document.getElementById('area-write').style.display=mode==='write'?'block':'none';
+  document.getElementById('finish').classList.remove('show');
+}
+function renderCurrent(){
+  if(idx>=deck.length){ showFinish(); return; }
+  const card=deck[idx]; updateProg();
+  if(mode==='flip') renderFlip(card);
+  else if(mode==='quiz') renderQuiz(card);
+  else renderWrite(card);
+}
+
+/* ── FLIP ── */
+function renderFlip(card){
+  flipped=false;
+  document.getElementById('card-inner').classList.remove('flipped');
+  document.getElementById('cfront-chip').textContent=fLang();
+  document.getElementById('cfront-word').textContent=getFront(card);
+  document.getElementById('card-sec').textContent=card[1];
+  document.getElementById('cback-chip').textContent=bLang();
+  document.getElementById('cback-word').textContent=getBack(card);
+  document.getElementById('cback-sub').textContent=getSub(card);
+  document.getElementById('rate-row').style.display='none';
+  document.getElementById('btn-prev').disabled=idx===0;
+  document.getElementById('card-ctr').innerHTML=`<strong>${idx+1}</strong> / ${deck.length}`;
+  updateCardStar('card-star-btn',card[0]);
+}
+function flipCard(){
+  flipped=!flipped;
+  document.getElementById('card-inner').classList.toggle('flipped',flipped);
+  document.getElementById('rate-row').style.display=flipped?'flex':'none';
+}
+function rateCard(knew){
+  if(knew){ scCorrect++;streak++;if(streak>maxStreak)maxStreak=streak;if(streak>=3)popStreak(); }
+  else { scWrong++;streak=0;wrongCards.push(deck[idx]); }
+  // swipe animation
+  const inner=document.getElementById('card-inner');
+  inner.classList.remove('flipped');
+  inner.classList.add(knew?'swipe-right':'swipe-left');
+  setTimeout(()=>{ inner.classList.remove('swipe-right','swipe-left'); idx++;flipped=false;renderCurrent(); },320);
+}
+function prevCard(){ if(idx>0){idx--;renderCurrent();} }
+function nextCardBrowse(){ idx++;renderCurrent(); }
+
+/* ── Card star button ── */
+function updateCardStar(btnId, word){
+  const btn=document.getElementById(btnId);
+  if(!btn) return;
+  if(isStarred(word)){ btn.textContent='★'; btn.classList.add('on'); }
+  else { btn.textContent='☆'; btn.classList.remove('on'); }
+}
+function toggleCardStar(e){
+  e.stopPropagation();
+  if(idx>=deck.length) return;
+  const word=deck[idx][0];
+  toggleStar(word);
+  ['card-star-btn','quiz-star-btn','write-star-btn'].forEach(id=>updateCardStar(id,word));
+}
+
+/* ── QUIZ ── */
+function renderQuiz(card){
+  quizDone=false;
+  document.getElementById('quiz-chip').textContent=dirLbl();
+  document.getElementById('quiz-word').textContent=getFront(card);
+  updateCardStar('quiz-star-btn',card[0]);
+  const correct=getBack(card);
+  const others=shuffle(deck.filter((_,i)=>i!==idx)).slice(0,3);
+  const opts=shuffle([correct,...others.map(c=>getBack(c))]);
+  const cont=document.getElementById('quiz-opts');
+  cont.innerHTML='';
+  opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-opt'; btn.textContent=opt;
+    btn.addEventListener('click',()=>{
+      if(quizDone)return; quizDone=true;
+      const isOk=opt===correct;
+      if(isOk){scCorrect++;streak++;if(streak>maxStreak)maxStreak=streak;if(streak>=3)popStreak();}
+      else{scWrong++;streak=0;wrongCards.push(card);}
+      updateProg();
+      cont.querySelectorAll('.quiz-opt').forEach(b=>{
+        b.classList.add('answered');
+        if(b.textContent===correct) b.classList.add('correct');
+        else if(b===btn&&!isOk) b.classList.add('wrong');
+      });
+      setTimeout(()=>{idx++;quizDone=false;renderCurrent();},950);
+    });
+    cont.appendChild(btn);
+  });
+}
+
+/* ── WRITE ── */
+function renderWrite(card){
+  writeDone=false;
+  document.getElementById('write-chip').textContent=dirLbl();
+  document.getElementById('write-word').textContent=getFront(card);
+  updateCardStar('write-star-btn',card[0]);
+  const inp=document.getElementById('write-inp');
+  inp.value=''; inp.className='write-inp'; inp.disabled=false;
+  const fb=document.getElementById('write-fb');
+  fb.className='write-fb'; fb.style.display='none';
+  document.getElementById('write-nxt').style.display='none';
+  setTimeout(()=>inp.focus(),40);
+}
+function checkWrite(){
+  if(writeDone)return;
+  const card=deck[idx];
+  const inp=document.getElementById('write-inp');
+  const val=inp.value.trim().toLowerCase();
+  if(!val)return;
+  const correct=getBack(card).toLowerCase();
+  const isOk=correct.split('/').some(p=>{ const t=p.trim(); return val===t||(val.length>=3&&t.startsWith(val)); });
+  writeDone=true; inp.disabled=true;
+  if(isOk){scCorrect++;streak++;if(streak>maxStreak)maxStreak=streak;if(streak>=3)popStreak();inp.className='write-inp ok';}
+  else{scWrong++;streak=0;wrongCards.push(card);inp.className='write-inp bad';}
+  updateProg();
+  const fb=document.getElementById('write-fb');
+  fb.className='write-fb '+(isOk?'ok':'bad');
+  fb.textContent=isOk?'✓ Верно: '+getBack(card):'✗ Правильно: '+getBack(card);
+  document.getElementById('write-nxt').style.display='block';
+}
+function nextAfterWrite(){ idx++;writeDone=false;renderCurrent(); }
+function skipWrite(){ scWrong++;streak=0;wrongCards.push(deck[idx]);updateProg();idx++;writeDone=false;renderCurrent(); }
+
+/* ── FINISH ── */
+function showFinish(){
+  showAreas();
+  const total=scCorrect+scWrong, pct=total?Math.round(scCorrect/total*100):0;
+  document.getElementById('f-c').textContent=scCorrect;
+  document.getElementById('f-w').textContent=scWrong;
+  document.getElementById('f-p').textContent=pct+'%';
+  document.getElementById('f-streak').textContent=maxStreak;
+  document.getElementById('f-emoji').textContent=pct>=80?'🎉':pct>=50?'💪':'📖';
+  document.getElementById('f-title').textContent=pct>=80?'Отлично!':pct>=50?'Хороший результат!':'Продолжай учить!';
+  document.getElementById('f-msg').textContent=`${scCorrect} из ${total} слов — ${pct}%`;
+  document.getElementById('finish').classList.add('show');
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('prog-txt').textContent=deck.length+' / '+deck.length;
+}
+
+/* ── CONTROLS ── */
+function setMode(m){
+  mode=m;
+  ['flip','quiz','write'].forEach(x=>document.getElementById('mb-'+x).classList.toggle('active',x===m));
+  restart();
+}
+function toggleShuffle(){ shuffleOn=!shuffleOn; document.getElementById('btn-shuffle').classList.toggle('on',shuffleOn); restart(); }
+function restart(){ buildDeck(getFiltered()); showAreas(); renderCurrent(); }
+function restartWrong(){ if(!wrongCards.length){restart();return;} buildDeck([...wrongCards]); showAreas(); renderCurrent(); }
+
+document.getElementById('fc-dir').addEventListener('change',e=>{dir=e.target.value;restart();});
+document.getElementById('fc-deck').addEventListener('change',restart);
+
+/* ── Touch / Swipe on card ── */
+let touchStartX=0, touchStartY=0;
+const scene=document.getElementById('card-scene');
+scene.addEventListener('touchstart',e=>{
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
+},{passive:true});
+scene.addEventListener('touchend',e=>{
+  if(mode!=='flip')return;
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  const dy=e.changedTouches[0].clientY-touchStartY;
+  if(Math.abs(dx)<Math.abs(dy)*1.2||Math.abs(dx)<40){
+    // vertical or small movement = flip
+    flipCard(); return;
+  }
+  if(!flipped) return; // must flip first to rate
+  if(dx>40) rateCard(true);
+  else if(dx<-40) rateCard(false);
+},{passive:true});
+scene.addEventListener('click',()=>{
+  if(mode==='flip') flipCard();
+});
+
+/* ── Keyboard ── */
+document.addEventListener('keydown',e=>{
+  if(currentPage!=='flashcards')return;
+  const inp=document.getElementById('write-inp');
+  if(document.activeElement===inp){
+    if(e.key==='Enter'){e.preventDefault();if(!writeDone)checkWrite();else nextAfterWrite();}
+    return;
+  }
+  if(mode==='flip'){
+    if(e.key===' '||e.key==='Enter'){e.preventDefault();flipCard();}
+    if(e.key==='ArrowRight'){e.preventDefault();flipped?rateCard(true):nextCardBrowse();}
+    if(e.key==='ArrowLeft'){e.preventDefault();flipped?rateCard(false):prevCard();}
+    if(e.key==='s'||e.key==='S'){if(idx<deck.length)toggleCardStar({stopPropagation:()=>{}});}
+  }
+});
+</script>
+</body>
+</html>

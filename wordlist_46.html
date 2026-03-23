@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wordlist 46 — Zakupy i usługi</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ee;
+    --surface: #ffffff;
+    --border: #e2ddd5;
+    --text: #1a1814;
+    --muted: #7a756c;
+    --accent: #2d5a3d;
+    --accent-light: #e8f0eb;
+
+    --s1: #e8f4fd; --s1t: #1a4a6e;
+    --s2: #edf7ee; --s2t: #1a4a23;
+    --s3: #fdf0e8; --s3t: #6e3010;
+    --s4: #fde8f0; --s4t: #6e1038;
+    --s5: #f0eafe; --s5t: #3a1a7e;
+    --s6: #e8fdf4; --s6t: #0e5035;
+    --s7: #fef8e8; --s7t: #6e4a00;
+    --s8: #f0f0f0; --s8t: #2a2a2a;
+    --s9: #fde8e8; --s9t: #6e1010;
+    --s10: #e8eefe; --s10t: #1a2870;
+    --s11: #edfdf0; --s11t: #0a4a20;
+    --s12: #fdeee8; --s12t: #6e2010;
+    --s13: #e8f8fe; --s13t: #0a4060;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 2rem 2.5rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  header h1 span {
+    font-weight: 300;
+    opacity: 0.7;
+    font-size: 1rem;
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px 0 34px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    outline: none;
+    transition: background 0.2s;
+  }
+
+  input[type="text"]::placeholder { color: rgba(255,255,255,0.55); }
+  input[type="text"]:focus { background: rgba(255,255,255,0.25); }
+
+  select {
+    height: 38px;
+    padding: 0 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    -webkit-appearance: none;
+    min-width: 160px;
+  }
+
+  select:focus { background: rgba(255,255,255,0.25); }
+  select option { background: #2d5a3d; color: #fff; }
+
+  .stats-bar {
+    padding: 0.6rem 2.5rem;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .stats-bar strong { color: var(--text); font-weight: 600; }
+
+  .legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: opacity 0.15s;
+  }
+
+  .leg-item:hover { opacity: 0.75; }
+
+  .leg-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .table-wrap {
+    padding: 1.5rem 2.5rem 3rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    font-size: 13.5px;
+  }
+
+  thead th {
+    background: #f0ede7;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 11px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  th:nth-child(1) { width: 25%; }
+  th:nth-child(2) { width: 14%; }
+  th:nth-child(3) { width: 30%; }
+  th:nth-child(4) { width: 31%; }
+
+  tbody tr {
+    border-bottom: 1px solid #f0ece6;
+    transition: background 0.1s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #faf8f5; }
+
+  td {
+    padding: 9px 14px;
+    vertical-align: middle;
+    line-height: 1.4;
+  }
+
+  td:first-child {
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
+
+  td:nth-child(3) { color: #3a3630; }
+  td:nth-child(4) { color: #3a3630; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .s1  { background: var(--s1);  color: var(--s1t); }
+  .s2  { background: var(--s2);  color: var(--s2t); }
+  .s3  { background: var(--s3);  color: var(--s3t); }
+  .s4  { background: var(--s4);  color: var(--s4t); }
+  .s5  { background: var(--s5);  color: var(--s5t); }
+  .s6  { background: var(--s6);  color: var(--s6t); }
+  .s7  { background: var(--s7);  color: var(--s7t); }
+  .s8  { background: var(--s8);  color: var(--s8t); }
+  .s9  { background: var(--s9);  color: var(--s9t); }
+  .s10 { background: var(--s10); color: var(--s10t); }
+  .s11 { background: var(--s11); color: var(--s11t); }
+  .s12 { background: var(--s12); color: var(--s12t); }
+  .s13 { background: var(--s13); color: var(--s13t); }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .section-group td:first-child::before {
+    content: '';
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 1.2rem 1rem 1rem; }
+    .table-wrap { padding: 1rem 0.5rem 2rem; }
+    .stats-bar { padding: 0.5rem 1rem; flex-direction: column; gap: 6px; align-items: flex-start; }
+    th:nth-child(4), td:nth-child(4) { display: none; }
+    th:nth-child(1) { width: 35%; }
+    th:nth-child(2) { width: 20%; }
+    th:nth-child(3) { width: 45%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Wordlist 46 <span>— Zakupy i usługi / Shopping &amp; Services</span></h1>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search" placeholder="Поиск по любому языку...">
+    </div>
+    <select id="filter">
+      <option value="">Все разделы (176)</option>
+      <option value="46.1">46.1 Types of shops</option>
+      <option value="46.2">46.2 Products</option>
+      <option value="46.3">46.3 Selling and buying</option>
+      <option value="46.4">46.4 Special offers</option>
+      <option value="46.5">46.5 Complaints</option>
+      <option value="46.6">46.6 Advertising</option>
+      <option value="46.7">46.7 Services</option>
+      <option value="46.8">46.8 Paying</option>
+      <option value="46.9">46.9 Finance &amp; banks</option>
+      <option value="46.10">46.10 Consumer rights</option>
+      <option value="46.11">46.11 Wordpower</option>
+      <option value="46.12">46.12 Idioms</option>
+      <option value="46.13">46.13 Phrases with touch</option>
+    </select>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <span id="stats-text">Показано: <strong>176</strong> из 176 слов</span>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="table-wrap">
+  <table id="vocab-table">
+    <thead>
+      <tr>
+        <th>English</th>
+        <th>Раздел</th>
+        <th>Русский</th>
+        <th>Polski</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+const SECTIONS = {
+  "46.1":  { label: "Types of shops",   cls: "s1",  color: "#4a90d4" },
+  "46.2":  { label: "Products",          cls: "s2",  color: "#4caf6a" },
+  "46.3":  { label: "Selling & buying",  cls: "s3",  color: "#e07a35" },
+  "46.4":  { label: "Special offers",    cls: "s4",  color: "#d45b8a" },
+  "46.5":  { label: "Complaints",        cls: "s5",  color: "#7b5ea7" },
+  "46.6":  { label: "Advertising",       cls: "s6",  color: "#2aa87d" },
+  "46.7":  { label: "Services",          cls: "s7",  color: "#c9960a" },
+  "46.8":  { label: "Paying",            cls: "s8",  color: "#888" },
+  "46.9":  { label: "Finance & banks",   cls: "s9",  color: "#c94040" },
+  "46.10": { label: "Consumer rights",   cls: "s10", color: "#3558c9" },
+  "46.11": { label: "Wordpower",         cls: "s11", color: "#1a8c40" },
+  "46.12": { label: "Idioms",            cls: "s12", color: "#c96030" },
+  "46.13": { label: "Phrases w/ touch",  cls: "s13", color: "#0a86b8" },
+};
+
+const DATA = [
+  ["baker's","46.1","пекарня","piekarnia"],
+  ["bookshop","46.1","книжный магазин","księgarnia"],
+  ["butcher's","46.1","мясная лавка","sklep mięsny"],
+  ["chain store","46.1","магазин сети","sklep sieciowy"],
+  ["chemist's","46.1","аптека","apteka"],
+  ["clothes shop","46.1","магазин одежды","sklep odzieżowy"],
+  ["corner shop","46.1","местный магазинчик","lokalny sklepik"],
+  ["deli","46.1","деликатесы","delikatesy"],
+  ["delicatessen","46.1","магазин деликатесов","delikatesy"],
+  ["department store","46.1","универмаг","dom towarowy"],
+  ["DIY store","46.1","магазин для мастеров","sklep dla majsterkowiczów"],
+  ["electrical shop","46.1","магазин электротоваров","sklep z artykułami elektrycznymi"],
+  ["fishmonger's","46.1","рыбный магазин","sklep rybny"],
+  ["florist's","46.1","цветочный магазин","kwiaciarnia"],
+  ["furniture shop","46.1","мебельный магазин","sklep meblowy"],
+  ["greengrocer's","46.1","овощной магазин","warzywniak"],
+  ["grocer's","46.1","продуктовый магазин","sklep spożywczy"],
+  ["high street","46.1","главная торговая улица","główna ulica"],
+  ["independent shop","46.1","независимый магазин","sklep nienależący do sieci"],
+  ["jeweller's","46.1","ювелирный магазин","jubiler"],
+  ["market","46.1","рынок","rynek / targ"],
+  ["market stall","46.1","рыночный прилавок","stragan / stoisko"],
+  ["music shop","46.1","музыкальный магазин","sklep muzyczny"],
+  ["newsagent's","46.1","газетный киоск","kiosk"],
+  ["off-licence","46.1","магазин алкоголя","sklep z alkoholem"],
+  ["online shop","46.1","интернет-магазин","sklep internetowy"],
+  ["outlet","46.1","точка розничной продажи","punkt sprzedaży detalicznej"],
+  ["pharmacy","46.1","аптека","apteka"],
+  ["shoe shop","46.1","обувной магазин","sklep obuwniczy"],
+  ["shopping centre","46.1","торговый центр","centrum handlowe"],
+  ["shopping mall","46.1","крытый торговый центр","zadaszone centrum handlowe"],
+  ["sports shop","46.1","спортивный магазин","sklep sportowy"],
+  ["stationer's","46.1","канцелярский магазин","sklep papierniczy"],
+  ["supermarket","46.1","супермаркет","supermarket"],
+  ["brand new","46.2","совершенно новый","zupełnie nowy"],
+  ["cardigan","46.2","кардиган","sweter rozpinany"],
+  ["dishwasher","46.2","посудомоечная машина","zmywarka do naczyń"],
+  ["good quality","46.2","хорошее качество","dobrej jakości"],
+  ["goods","46.2","товары","towary"],
+  ["groceries","46.2","продукты питания","artykuły spożywcze"],
+  ["jeans","46.2","джинсы","dżinsy"],
+  ["jumper","46.2","джемпер","sweter (wkładany przez głowę)"],
+  ["luxury items","46.2","предметы роскоши","towary luksusowe"],
+  ["afford","46.3","позволить себе","móc sobie na coś pozwolić"],
+  ["bankrupt","46.3","банкрот / обанкротиться","zbankrutować"],
+  ["bargain","46.3","выгодная покупка / случай","okazja"],
+  ["budget","46.3","бюджет / планировать","planować / budżet"],
+  ["changing room","46.3","примерочная","przymierzalnia"],
+  ["checkout","46.3","касса","kasa"],
+  ["choice","46.3","выбор","wybór"],
+  ["close down","46.3","закрываться","zamykać"],
+  ["compare","46.3","сравнивать","porównywać"],
+  ["convenience","46.3","удобство","wygoda / udogodnienie"],
+  ["customer / client","46.3","покупатель / клиент","klient / klientka"],
+  ["fitting room","46.3","примерочная","przymierzalnia"],
+  ["have sth in stock","46.3","иметь в наличии","mieć coś na stanie"],
+  ["opening hours","46.3","часы работы","godziny otwarcia"],
+  ["out of stock","46.3","нет в наличии","wyprzedany"],
+  ["profit","46.3","прибыль","zysk"],
+  ["purchase","46.3","покупка / покупать","kupować / zakupy"],
+  ["quality","46.3","качество","jakość"],
+  ["queue","46.3","очередь","kolejka"],
+  ["reduced","46.3","по сниженной цене","obniżony"],
+  ["shopping list","46.3","список покупок","lista zakupów"],
+  ["shopping trolley","46.3","тележка для покупок","wózek na zakupy"],
+  ["special offer","46.3","специальное предложение","oferta specjalna"],
+  ["staff","46.3","персонал","personel"],
+  ["stall holder","46.3","владелец прилавка","straganarz"],
+  ["try sth on","46.3","примерить что-либо","przymierzać coś"],
+  ["value","46.3","ценность / стоимость","wartość"],
+  ["20% off","46.4","скидка 20%","dwadzieścia procent taniej"],
+  ["closing down sale","46.4","распродажа при закрытии","wyprzedaż przy likwidacji"],
+  ["discount","46.4","скидка","rabat / zniżka"],
+  ["good deal","46.4","выгодная сделка","dobra oferta"],
+  ["good value for money","46.4","хорошее соотношение цены/качества","dobry stosunek wartości do ceny"],
+  ["half price","46.4","полцены","za pół ceny"],
+  ["in the sale","46.4","на распродаже","w wyprzedaży"],
+  ["look for a bargain","46.4","искать выгодную покупку","szukać okazji"],
+  ["consumer awareness","46.5","осведомлённость потребителей","świadomość konsumentów"],
+  ["customer care","46.5","обслуживание клиентов","obsługa klienta"],
+  ["exchange","46.5","обменивать","wymienić"],
+  ["fail to work","46.5","не работать","działać wadliwie"],
+  ["faulty","46.5","неисправный","wadliwy"],
+  ["get your money back","46.5","вернуть деньги","odzyskać pieniądze"],
+  ["helpline","46.5","горячая линия","linia pomocy telefonicznej"],
+  ["incompetent","46.5","некомпетентный","niekompetentny"],
+  ["receipt","46.5","квитанция / чек","rachunek / paragon"],
+  ["refund","46.5","возврат денег","zwrot pieniędzy"],
+  ["return sth","46.5","вернуть что-либо","oddawać coś"],
+  ["service","46.5","обслуживание","obsługa"],
+  ["advertisement","46.6","реклама","reklama"],
+  ["advertising campaign","46.6","рекламная кампания","kampania reklamowa"],
+  ["billboard","46.6","рекламный щит","billboard"],
+  ["brand name","46.6","торговая марка","nazwa marki"],
+  ["customer-friendly","46.6","ориентированный на клиента","przyjazny dla klienta"],
+  ["fair-trade","46.6","справедливая торговля","sprawiedliwy handel"],
+  ["flyer","46.6","листовка","ulotka"],
+  ["handmade","46.6","ручной работы","ręcznej roboty"],
+  ["hoarding","46.6","большой рекламный щит","duża tablica reklamowa"],
+  ["label","46.6","этикетка","etykieta / określenie"],
+  ["leaflet","46.6","листовка / брошюра","ulotka"],
+  ["market research","46.6","исследование рынка","badanie rynku"],
+  ["organic","46.6","органический","naturalny / ekologiczny"],
+  ["promotion","46.6","продвижение / акция","promocja / reklama"],
+  ["publicity","46.6","огласка / реклама","rozgłos / reklama"],
+  ["range","46.6","ассортимент / диапазон","zakres"],
+  ["TV commercial","46.6","телевизионная реклама","reklama telewizyjna"],
+  ["bank","46.7","банк","bank"],
+  ["business","46.7","бизнес / предприятие","działalność gospodarcza"],
+  ["car wash","46.7","автомойка","myjnia samochodowa"],
+  ["carpenter","46.7","плотник / столяр","stolarz / cieśla"],
+  ["contract (hire)","46.7","контракт (найм)","wynająć kogoś do czegoś"],
+  ["contract (agreement)","46.7","договор / соглашение","umowa"],
+  ["delivery","46.7","доставка","dostawa"],
+  ["dry cleaner's","46.7","химчистка","pralnia chemiczna"],
+  ["estate agent's","46.7","агентство недвижимости","agencja nieruchomości"],
+  ["financial adviser","46.7","финансовый советник","doradca finansowy"],
+  ["hairdresser's","46.7","парикмахерская","salon fryzjerski"],
+  ["hire","46.7","нанимать","najmować (do pracy)"],
+  ["manufacturer","46.7","производитель","producent / wytwórca"],
+  ["order","46.7","заказывать","zamawiać"],
+  ["petrol station","46.7","автозаправочная станция","stacja benzynowa"],
+  ["plumber","46.7","сантехник","hydraulik"],
+  ["retailer","46.7","розничный торговец","sprzedawca detaliczny"],
+  ["specialist","46.7","специалист","specjalista / specjalistka"],
+  ["tailor","46.7","портной","krawiec"],
+  ["travel agent's","46.7","туристическое агентство","biuro podróży"],
+  ["borrow money from sb","46.8","занять деньги у кого-то","pożyczać od kogoś pieniądze"],
+  ["cash","46.8","наличные деньги","gotówka / pieniądze"],
+  ["cash on delivery","46.8","наложенный платёж","płatność przy odbiorze"],
+  ["be strapped for cash","46.8","испытывать нехватку денег","odczuwać brak gotówki"],
+  ["charge","46.8","плата / сбор","opłata / należność"],
+  ["cost a fortune","46.8","стоить целое состояние","kosztować majątek"],
+  ["cost/pay an arm and a leg","46.8","стоить огромных денег","słono kosztować / zapłacić"],
+  ["deposit","46.8","залог / задаток","zaliczka / zadatek"],
+  ["lend","46.8","одолжить (кому-то)","pożyczać (komuś)"],
+  ["money","46.8","деньги","pieniądze"],
+  ["owe","46.8","быть должным","być winnym / dłużnym"],
+  ["pay by bank transfer","46.8","платить банковским переводом","płacić przelewem"],
+  ["pay by credit/debit card","46.8","платить картой","płacić kartą kredytową / debetową"],
+  ["pay in advance","46.8","платить вперёд","płacić z góry"],
+  ["pay in cash","46.8","платить наличными","płacić gotówką"],
+  ["pay in instalments","46.8","платить в рассрочку","płacić w ratach"],
+  ["pay the balance","46.8","оплатить остаток долга","spłacić resztę należności"],
+  ["pay through the nose","46.8","переплачивать","przepłacać"],
+  ["rip-off","46.8","мошенничество / обман","złodziejstwo / oszustwo"],
+  ["take out a loan","46.8","взять кредит","wziąć pożyczkę"],
+  ["amount","46.9","сумма / квота","kwota / suma"],
+  ["annual rate","46.9","годовая ставка","roczna stopa procentowa"],
+  ["ATM","46.9","банкомат","bankomat"],
+  ["balance","46.9","баланс / остаток","saldo"],
+  ["bank account","46.9","банковский счёт","konto bankowe"],
+  ["billing cycle","46.9","расчётный период","cykl rozliczeniowy"],
+  ["card number","46.9","номер карты","numer karty"],
+  ["card type","46.9","тип карты","typ karty"],
+  ["card verification number","46.9","код верификации карты","numer weryfikacyjny"],
+  ["cardholder","46.9","держатель карты","właściciel karty"],
+  ["cash machine","46.9","банкомат","bankomat"],
+  ["cheque","46.9","чек","czek"],
+  ["credit card cloning","46.9","клонирование карты","kopiowanie karty kredytowej"],
+  ["credit limit","46.9","кредитный лимит","limit kredytowy"],
+  ["debit card","46.9","дебетовая карта","karta debetowa"],
+  ["debt-free","46.9","без долгов","wolny od zadłużenia"],
+  ["exceed","46.9","превышать","przekraczać"],
+  ["exchange rate","46.9","обменный курс","kurs wymiany (walut)"],
+  ["expiry date","46.9","срок действия / истечения","termin ważności"],
+  ["fees","46.9","комиссия / сборы","opłaty"],
+  ["foreign currency","46.9","иностранная валюта","obca waluta"],
+  ["income","46.9","доход","dochód"],
+  ["insured","46.9","застрахованный","ubezpieczony"],
+  ["interest","46.9","проценты","oprocentowanie"],
+  ["interest rate","46.9","процентная ставка","stopa procentowa"],
+  ["invest in shares/stocks","46.9","инвестировать в акции","inwestować w akcje"],
+  ["investor","46.9","инвестор","inwestor"],
+  ["pay back","46.9","вернуть долг","zwrócić"],
+  ["pay off","46.9","погасить долг","spłacić"],
+  ["PIN number","46.9","PIN-код","numer PIN"],
+  ["stock exchange","46.9","фондовая биржа","giełda papierów wartościowych"],
+  ["stock market","46.9","фондовый рынок","giełda"],
+  ["terms and conditions","46.9","условия и положения","zasady i warunki"],
+  ["unauthorized","46.9","несанкционированный","nieautoryzowany"],
+  ["consumer","46.10","потребитель","konsument"],
+  ["consumer protection","46.10","защита прав потребителей","ochrona konsumenta"],
+  ["durable goods","46.10","товары длит. пользования","dobra trwałe"],
+  ["full warranty","46.10","полная гарантия","pełna gwarancja"],
+  ["limited warranty","46.10","ограниченная гарантия","ograniczona gwarancja"],
+  ["liability","46.10","ответственность","odpowiedzialność"],
+  ["liable","46.10","ответственный","odpowiedzialny"],
+  ["marketplace","46.10","рынок / торговая площадка","rynek"],
+  ["mediation","46.10","посредничество","mediacja"],
+  ["merchandise","46.10","товары","towar"],
+  ["monopoly","46.10","монополия","monopol"],
+  ["protection","46.10","защита","ochrona"],
+  ["regulations","46.10","правила / регламент","przepisy / regulacje"],
+  ["resolve a dispute","46.10","разрешить спор","rozwiązać spór"],
+  ["statutory rights","46.10","законные права","prawa ustawowe"],
+  ["unfair practices","46.10","недобросовестная практика","nieuczciwe praktyki"],
+  ["assess","46.11","оценивать","ocenić"],
+  ["cautious","46.11","осторожный","ostrożny / przezorny"],
+  ["entitled to sth","46.11","иметь право на что-либо","być uprawnionym do czegoś"],
+  ["expire","46.11","истекать (о сроке)","wygasać / tracić ważność"],
+  ["guarantee","46.11","гарантия","gwarancja"],
+  ["misleading","46.11","вводящий в заблуждение","wprowadzający w błąd"],
+  ["resemble","46.11","быть похожим на","przypominać"],
+  ["be struck by sth","46.12","быть поражённым чем-либо","być pod wrażeniem czegoś"],
+  ["give sth a new lease of life","46.12","дать новую жизнь чему-либо","tchnąć w coś nowe życie"],
+  ["have a brainwave","46.12","получить озарение","doznać olśnienia"],
+  ["work your magic","46.12","сотворить чудо","wyczarować coś"],
+  ["be in touch with","46.13","поддерживать связь / быть в курсе","być z kimś w kontakcie"],
+  ["be out of touch","46.13","не ориентироваться / потерять связь","nie orientować się"],
+  ["get in touch","46.13","связаться","skontaktować się"],
+  ["have the Midas touch","46.13","иметь золотые руки","mieć dotyk Midasa"],
+  ["lose touch","46.13","потерять контакт","tracić kontakt"],
+  ["put the finishing touches","46.13","нанести последние штрихи","dodać ostatnie poprawki"],
+  ["touch and go","46.13","неопределённый / рискованный","niepewny"],
+  ["touch base","46.13","кратко переговорить","skontaktować się krótko"],
+  ["touch on sth","46.13","затронуть тему / вопрос","dotknąć istotnej kwestii"],
+];
+
+function buildLegend() {
+  const leg = document.getElementById('legend');
+  Object.entries(SECTIONS).forEach(([key, val]) => {
+    const el = document.createElement('span');
+    el.className = 'leg-item';
+    el.title = 'Фильтр: ' + key;
+    el.innerHTML = `<span class="leg-dot" style="background:${val.color}"></span>${key}`;
+    el.addEventListener('click', () => {
+      const sel = document.getElementById('filter');
+      sel.value = sel.value === key ? '' : key;
+      render();
+    });
+    leg.appendChild(el);
+  });
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const sec = document.getElementById('filter').value;
+  const filtered = DATA.filter(r => {
+    const matchSec = !sec || r[1] === sec;
+    const matchQ = !q || r[0].toLowerCase().includes(q) || r[2].toLowerCase().includes(q) || r[3].toLowerCase().includes(q);
+    return matchSec && matchQ;
+  });
+  const tbody = document.getElementById('tbody');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="no-results">Ничего не найдено — попробуйте другой запрос</td></tr>';
+    document.getElementById('stats-text').innerHTML = 'Показано: <strong>0</strong> из ' + DATA.length + ' слов';
+    return;
+  }
+  tbody.innerHTML = filtered.map(r => {
+    const s = SECTIONS[r[1]];
+    return `<tr>
+      <td>${r[0]}</td>
+      <td><span class="badge ${s.cls}">${r[1]}</span></td>
+      <td>${r[2]}</td>
+      <td>${r[3]}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('stats-text').innerHTML = `Показано: <strong>${filtered.length}</strong> из ${DATA.length} слов`;
+}
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('filter').addEventListener('change', render);
+buildLegend();
+render();
+</script>
+</body>
+</html>
